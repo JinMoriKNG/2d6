@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototipo - 2d6</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Fonts -->
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" 
+        rel="stylesheet"
+    />
+
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@200..700&display=swap" 
+        rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              Oswald: ["Oswald", "system-ui", "sans-serif"],
+              BebasNeue: ["Bebas+Neue", "system-ui", "sans-serif"],
+            },
+            colors: {
+              LightYellow: "#F2EA79",
+              Gold: "#F2B84B",
+              Brown: '#BF6E26',
+              Terracota: "#8C3414",
+              Crimson: '#400101',
+              White: '#ffffff',
+            },
+            borderWidth: {
+              3: "3px",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Custom Css -->
+
+    <style>
+        * {
+            scroll-behavior: smooth;
+        }
+
+        .border-3 {
+            border-width: 3px;
+        }
+
+        /* Custom Line Height*/
+        .leading-066 {
+            line-height: 0.66;
+        }
+        .leading-072 {
+            line-height: 0.72;
+        }
+        .leading-105 {
+            line-height: 1.05;
+        }
+        .leading-124 {
+            line-height: 1.24;
+        }
+        .leading-155 {
+            line-height: 1.55;
+        }
+        .tracking-002em {
+            letter-spacing: -0.02em;
+        }
+        .tracking-036px {
+            letter-spacing: 0.36px;
+        }
+        .tracking-04px {
+            letter-spacing: 0.4px;
+        }
+        .tracking-06px {
+            letter-spacing: 0.6px;
+        }
+        .text-8x1-responsive {
+            font-size: clamp(4rem, 12w, 25rem);
+        }
+
+        .faq-item {
+            transition: all 0.3s ease;
+        }
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.03s ease;
+        }
+        .faq-item.activate .faq-content {
+            max-height: 200px;
+        }
+        .faq-item.activate .chevron {
+            transform: rotate(90deg);
+        }
+        .chevron {
+            transition: transform 0.03s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="tittle-2d6" class="White">2D6</h1>
+</body>
+</html>
