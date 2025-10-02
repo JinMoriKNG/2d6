@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="./output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Dice Icons -->
+    <script>
+        import { FaDice } from "react-icons/fa";
+    </script>
+
+    <!-- Custom Fonts -->
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" 
+        rel="stylesheet"
+    />
+
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@200..700&display=swap" 
+        rel="stylesheet"
+    />
+
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Caudex:ital,wght@0,400;0,700;1,400;1,700&display=swap" 
+        rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              Oswald: ["Oswald", "system-ui", "sans-serif"],
+              BebasNeue: ["Bebas+Neue", "system-ui", "sans-serif"],
+              Caudex: ["Caudex", "system-ui", "sans-serif"],
+            },
+            colors: {
+              lightYellow: "#F2EA79",
+              gold: "#F2B84B",
+              brown: '#BF6E26',
+              terracota: "#8C3414",
+              crimson: '#400101',
+              white: '#ffffff',
+            },
+            borderWidth: {
+              3: "3px",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Custom Css -->
+
+    <style>
+        * {
+            scroll-behavior: smooth;
+        }
+
+        .border-3 {
+            border-width: 3px;
+        }
+
+        /* Custom Line Height*/
+        .leading-066 {
+            line-height: 0.66;
+        }
+        .leading-072 {
+            line-height: 0.72;
+        }
+        .leading-105 {
+            line-height: 1.05;
+        }
+        .leading-124 {
+            line-height: 1.24;
+        }
+        .leading-155 {
+            line-height: 1.55;
+        }
+        .tracking-002em {
+            letter-spacing: -0.02em;
+        }
+        .tracking-036px {
+            letter-spacing: 0.36px;
+        }
+        .tracking-04px {
+            letter-spacing: 0.4px;
+        }
+        .tracking-06px {
+            letter-spacing: 0.6px;
+        }
+        .text-8x1-responsive {
+            font-size: clamp(4rem, 12w, 25rem);
+        }
+
+        .faq-item {
+            transition: all 0.3s ease;
+        }
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.03s ease;
+        }
+        .faq-item.activate .faq-content {
+            max-height: 200px;
+        }
+        .faq-item.activate .chevron {
+            transform: rotate(90deg);
+        }
+        .chevron {
+            transition: transform 0.03s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-terracota">
+    <div id="SideBar" class="fixed top-0 left-0 h-screen w-20 sm:w-36 m-0 flex flex-col bg-crimson text-lightYellow shadow-lg items-center">
+
+        <button id="dice-btn" class="box-content size-4 border-2 p-4 m-4 rounded-lg sm:size-6 sm:rounded-2x1 text-center border-gold hover:bg-red-900 transition-colors">
+            <img src="src/2D6.png" alt="DoisDSeis">
+        </button>
+        
+        <div id="dice-label" class="hidden fixed top-0 left-0 h-screen w-18 sm:w-38 m-0 flex-col bg-crimson text-lightYellow shadow-lg items-center flex">
+            <li id="Roll2D6" class="w-16 sm:w-32 h-10 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-2 hover:bg-brown font-Caudex font-black text-xl">2D6</li>
+            <li id="RollD4" class="w-16 sm:w-32 h-10 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-2 hover:bg-brown font-Caudex font-black text-xl">D4</li>
+            <li id="RollD6" class="w-16 sm:w-32 h-10 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-2 hover:bg-brown font-Caudex font-black text-xl">D6</li>
+            <li id="RollD8" class="w-16 sm:w-32 h-10 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-2 hover:bg-brown font-Caudex font-black text-xl">D8</li>
+            <li id="RollD10" class="w-16 sm:w-32 h-10 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-2 hover:bg-brown font-Caudex font-black text-xl">D10</li>
+            <li id="RollD12" class="w-16 sm:w-32 h-10 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-2 hover:bg-brown font-Caudex font-black text-xl">D12</li>
+            <li id="RollD20" class="w-16 sm:w-32 h-10 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-2 hover:bg-brown font-Caudex font-black text-xl">D20</li>
+            <li id="RollD100" class="w-16 sm:w-32 h-10 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-2 hover:bg-brown font-Caudex font-black text-xl">D100</li>
+            <input type="number" placeholder="Stats" id="recordStats" class="w-16 sm:w-32 h-10 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-2 font-Caudex font-black text-xl">
+            <input type="number" placeholder="Dices" id="dicesQuantitys" class="w-16 sm:w-32 h-10 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-2 font-Caudex font-black text-xl">
+
+            <div class="text-center">
+                <div id="dice-result"
+                    class="text-6xl font-extrabold bg-gold text-crimson w-14 sm:w-24 h-14 sm:h-24 mx-auto flex items-center justify-center rounded shadow transition-transform duration-200 scale-100 mt-5">
+                        1
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const diceBtn = document.getElementById('dice-btn');
+            const diceLabel = document.getElementById('dice-label');
+            let menuOpen = false;
+            
+            diceBtn.addEventListener('click', (e) => {
+                diceLabel.classList.toggle('hidden');
+                menuOpen = !diceLabel.classList.contains('hidden');
+            });
+
+            // Close Menu when click outside
+            document.addEventListener('click', (e) => {
+                if (menuOpen && !diceLabel.contains(e.target) && e.target !== diceBtn) {
+                    menuOpen = false;
+                    diceLabel.classList.add('hidden');
+                }
+            }, true);
+        </script>
+        
+        <script defer>
+            document.addEventListener('DOMContentLoaded', () => {
+                const roll2d6 = document.getElementById('Roll2D6');
+                const rollD6 = document.getElementById('RollD6');
+                const rollD8 = document.getElementById('RollD8');
+                const rollD10 = document.getElementById('RollD10');
+                const rollD12 = document.getElementById('RollD12');
+                const rollD20 = document.getElementById('RollD20');
+                const rollD100 = document.getElementById('RollD100');
+                const dice = document.getElementById('dice-result');
+                const status = document.getElementById('recordStats').value;
+
+            roll2d6.addEventListener('click', () => {
+                const primeiroD6 = Math.floor(Math.random() * 6) + 1; // random number between 1 and 6
+                const segundoD6 = Math.floor(Math.random() * 6) + 1; 
+                dice.textContent = primeiroD6 + segundoD6 + status;
+
+                // animation
+                dice.classList.remove('scale-100');
+                dice.classList.add('scale-150');
+                setTimeout(() => {
+                    dice.classList.remove('scale-150');
+                    dice.classList.add('scale-100');
+                }, 200);
+            });
+        });
+        </script>
+
+        <script defer>
+            document.addEventListener('DOMContentLoaded', () => {
+                const quantidade = document.getElementById('diceQuantity')
+                const resultados = [];
+                const rollD4 = document.getElementById('RollD4');
+                const dice = document.getElementById('dice-result');
+            
+            for (let i = 0; i < quantidade; i++) {
+                rollD4.addEventListener('click', () => {
+                    const Dice4 = Math.floor(Math.random() * 4) + 1; // random number between 1 and 4
+                    resultados.push(Dice4);
+                    dice.textContent = resultado;
+                    
+                // animation
+                dice.classList.remove('scale-100');
+                dice.classList.add('scale-150');
+                setTimeout(() => {
+                    dice.classList.remove('scale-150');
+                    dice.classList.add('scale-100');
+                }, 200);
+            });
+        }});
+                
+        </script>
+
+        <button id="records-Btn" class="box-content size-4 border-2 p-4 m-4 rounded-lg sm:size-6 sm:rounded-2x1 text-center border-gold hover:bg-red-900 transition-colors">
+            <img src="src/Fichas.png" alt="Fichas" class="size-4 sm:size-6">
+        </button>
+
+        <button id="createRecords-Btn" class="box-content size-4 border-2 p-4 m-4 rounded-lg sm:size-6 sm:rounded-2x1 text-center border-gold hover:bg-red-900 transition-colors">
+            <img src="src/CriarFicha.png" alt="CriarFicha">
+        </button>
+
+        <a class="box-content size-4 border-2 p-4 m-4 rounded-lg sm:size-6 sm:rounded-2x1 text-center border-gold" href="#"></a>
+        <a class="box-content size-4 border-2 p-4 m-4 rounded-lg sm:size-6 sm:rounded-2x1 text-center border-gold" href="#"></a>
+    </div>
+</body>
+</html>
