@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="./output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Dice Icons -->
+    <script>
+        import { FaDice } from "react-icons/fa";
+    </script>
+
+    <!-- Custom Fonts -->
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" 
+        rel="stylesheet"
+    />
+
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@200..700&display=swap" 
+        rel="stylesheet"
+    />
+
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Caudex:ital,wght@0,400;0,700;1,400;1,700&display=swap" 
+        rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              Oswald: ["Oswald", "system-ui", "sans-serif"],
+              BebasNeue: ["Bebas+Neue", "system-ui", "sans-serif"],
+              Caudex: ["Caudex", "system-ui", "sans-serif"],
+            },
+            colors: {
+              lightYellow: "#F2EA79",
+              gold: "#F2B84B",
+              brown: '#BF6E26',
+              terracota: "#8C3414",
+              crimson: '#400101',
+              white: '#ffffff',
+            },
+            borderWidth: {
+              3: "3px",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Custom Css -->
+
+    <style>
+        * {
+            scroll-behavior: smooth;
+        }
+
+        .text-10px {
+            font-size: 10px;
+        }
+
+        .border-3 {
+            border-width: 3px;
+        }
+
+        /* Custom Line Height*/
+        .leading-066 {
+            line-height: 0.66;
+        }
+        .leading-072 {
+            line-height: 0.72;
+        }
+        .leading-105 {
+            line-height: 1.05;
+        }
+        .leading-124 {
+            line-height: 1.24;
+        }
+        .leading-155 {
+            line-height: 1.55;
+        }
+        .tracking-002em {
+            letter-spacing: -0.02em;
+        }
+        .tracking-036px {
+            letter-spacing: 0.36px;
+        }
+        .tracking-04px {
+            letter-spacing: 0.4px;
+        }
+        .tracking-06px {
+            letter-spacing: 0.6px;
+        }
+        .text-8x1-responsive {
+            font-size: clamp(4rem, 12w, 25rem);
+        }
+        .ficha-5x1 {
+            width: 64rem;
+        }
+
+        .faq-item {
+            transition: all 0.3s ease;
+        }
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.03s ease;
+        }
+        .faq-item.activate .faq-content {
+            max-height: 200px;
+        }
+        .faq-item.activate .chevron {
+            transform: rotate(90deg);
+        }
+        .chevron {
+            transition: transform 0.03s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-terracota">
+    <button id="back-btn" class="top-0 right-0 fixed flex box-content size-4 border-2 p-2 m-4 rounded-lg sm:size-6 sm:rounded-2x1 border-gold hover:bg-red-900 transition-colors w-6 h-5 sm:h-6 sm:w-7 text-gold text-center">
+        BACK
+    </button>
+
+    <button id="menu-btn" class="top-0 left-0 fixed flex box-content size-4 border-2 p-2 m-4 rounded-lg sm:size-6 sm:rounded-2x1 border-gold hover:bg-red-900 transition-colors w-6 h-5 sm:h-6 sm:w-7 text-gold">
+        <svg
+            width="28"
+            height="28"
+            class="w-6 h-6 sm:w-7 sm:h-7"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+            ></path>
+        </svg>
+    </button>
+
+    <div id="menu-left" class="hidden top-0 left-0 min-h-screen w-20 sm:w-36 m-0 flex flex-col bg-crimson text-lightYellow shadow-lg items-center fixed">
+
+        <button id="dice-btn" class="box-content size-4 border-2 p-4 m-4 rounded-lg sm:size-6 sm:rounded-2x1 text-center border-gold hover:bg-crimson transition-colors">
+            <img src="src/2D6.png" alt="DoisDSeis">
+        </button>
+        
+        <div id="dice-label" class="hidden fixed top-0 left-0 min-h-screen w-18 sm:w-44 m-0 flex-col bg-crimson text-lightYellow shadow-lg items-center flex">
+            <li id="Roll2D6" class="w-16 sm:w-28 h-8 top-8 mt-4 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black text-xl">2D6</li>
+            <li id="RollD4" class="w-16 sm:w-28 h-8 top-8 mt-4 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black text-xl">D4</li>
+            <li id="RollD6" class="w-16 sm:w-28 h-8 top-8 mt-4 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black text-xl">D6</li>
+            <li id="RollD8" class="w-16 sm:w-28 h-8 top-8 mt-4 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black text-xl">D8</li>
+            <li id="RollD10" class="w-16 sm:w-28 h-8 top-8 mt-4 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black text-xl">D10</li>
+            <li id="RollD12" class="w-16 sm:w-28 h-8 top-8 mt-4 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black text-xl">D12</li>
+            <li id="RollD20" class="w-16 sm:w-28 h-8 top-8 mt-4 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black text-xl">D20</li>
+            <li id="RollD100" class="w-16 sm:w-28 h-8 top-8 mt-4 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black text-xl">D100</li>
+            <input type="number" placeholder="Stats" id="recordStats" class="w-16 sm:w-28 h-8 top-8 mt-4 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-2 font-Caudex font-black text-xl">
+
+            <div class="text-center">
+                <div id="dice-result"
+                    class="text-6xl font-extrabold bg-gold text-crimson w-14 sm:w-24 h-14 sm:h-24 mx-auto flex items-center justify-center rounded shadow transition-transform duration-200 scale-100 mt-5">
+                        1
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const diceBtn = document.getElementById('dice-btn');
+            const diceLabel = document.getElementById('dice-label');
+            let diceOpen = false;
+            
+            diceBtn.addEventListener('click', (e) => {
+                diceLabel.classList.toggle('hidden');
+                diceOpen = !diceLabel.classList.contains('hidden');
+            });
+
+            // Close Menu when click outside
+            document.addEventListener('click', (e) => {
+                if (diceOpen && !diceLabel.contains(e.target) && e.target !== diceBtn) {
+                    diceOpen = false;
+                    diceLabel.classList.add('hidden');
+                }
+            }, true);
+        </script>
+        
+        <script defer>
+            document.addEventListener('DOMContentLoaded', () => {
+                const roll2d6 = document.getElementById('Roll2D6');
+                const dice = document.getElementById('dice-result');
+                const status = document.getElementById('recordStats').value;
+
+            roll2d6.addEventListener('click', () => {
+                const status = parseInt(recordStats.value) || 0;
+                const primeiroD6 = Math.floor(Math.random() * 6) + 1; // random number between 1 and 6
+                const segundoD6 = Math.floor(Math.random() * 6) + 1; 
+                dice.textContent = status + primeiroD6 + segundoD6;
+
+                // animation
+                dice.classList.remove('scale-100');
+                dice.classList.add('scale-150');
+                setTimeout(() => {
+                    dice.classList.remove('scale-150');
+                    dice.classList.add('scale-100');
+                }, 200);
+            });
+        });
+        </script>
+
+        <script defer>
+            document.addEventListener('DOMContentLoaded', () => {
+                const rolld4 = document.getElementById('RollD4');
+                const dice = document.getElementById('dice-result');
+                const status = document.getElementById('recordStats').value;
+
+            rolld4.addEventListener('click', () => {
+                const status = parseInt(recordStats.value) || 0;
+                const resD4 = Math.floor(Math.random() * 4) + 1; // random number between 1 and 4
+                dice.textContent = status + resD4;
+
+                // animation
+                dice.classList.remove('scale-100');
+                dice.classList.add('scale-150');
+                setTimeout(() => {
+                    dice.classList.remove('scale-150');
+                    dice.classList.add('scale-100');
+                }, 200);
+            });
+        });        
+        </script>
+
+        <script defer>
+            document.addEventListener('DOMContentLoaded', () => {
+                const rolld6 = document.getElementById('RollD6');
+                const dice = document.getElementById('dice-result');
+                const status = document.getElementById('recordStats').value;
+
+            rolld6.addEventListener('click', () => {
+                const status = parseInt(recordStats.value) || 0;
+                const resD6 = Math.floor(Math.random() * 6) + 1; // random number between 1 and 6
+                dice.textContent = status + resD6;
+
+                // animation
+                dice.classList.remove('scale-100');
+                dice.classList.add('scale-150');
+                setTimeout(() => {
+                    dice.classList.remove('scale-150');
+                    dice.classList.add('scale-100');
+                }, 200);
+            });
+        });        
+        </script>
+
+        <script defer>
+            document.addEventListener('DOMContentLoaded', () => {
+                const rolld8 = document.getElementById('RollD8');
+                const dice = document.getElementById('dice-result');
+                const status = document.getElementById('recordStats').value;
+
+            rolld8.addEventListener('click', () => {
+                const status = parseInt(recordStats.value) || 0;
+                const resD8 = Math.floor(Math.random() * 8) + 1; // random number between 1 and 8
+                dice.textContent = status + resD8;
+
+                // animation
+                dice.classList.remove('scale-100');
+                dice.classList.add('scale-150');
+                setTimeout(() => {
+                    dice.classList.remove('scale-150');
+                    dice.classList.add('scale-100');
+                }, 200);
+            });
+        });        
+        </script>
+
+        <script defer>
+            document.addEventListener('DOMContentLoaded', () => {
+                const rolld10 = document.getElementById('RollD10');
+                const dice = document.getElementById('dice-result');
+                const status = document.getElementById('recordStats').value;
+
+            rolld10.addEventListener('click', () => {
+                const status = parseInt(recordStats.value) || 0;
+                const resD10 = Math.floor(Math.random() * 10) + 1; // random number between 1 and 10
+                dice.textContent = status + resD10;
+
+                // animation
+                dice.classList.remove('scale-100');
+                dice.classList.add('scale-150');
+                setTimeout(() => {
+                    dice.classList.remove('scale-150');
+                    dice.classList.add('scale-100');
+                }, 200);
+            });
+        });        
+        </script>
+
+        <script defer>
+            document.addEventListener('DOMContentLoaded', () => {
+                const rolld12 = document.getElementById('RollD12');
+                const dice = document.getElementById('dice-result');
+                const status = document.getElementById('recordStats').value;
+
+            rolld12.addEventListener('click', () => {
+                const status = parseInt(recordStats.value) || 0;
+                const resD12 = Math.floor(Math.random() * 12) + 1; // random number between 1 and 12
+                dice.textContent = status + resD12;
+
+                // animation
+                dice.classList.remove('scale-100');
+                dice.classList.add('scale-150');
+                setTimeout(() => {
+                    dice.classList.remove('scale-150');
+                    dice.classList.add('scale-100');
+                }, 200);
+            });
+        });        
+        </script>
+
+        <script defer>
+            document.addEventListener('DOMContentLoaded', () => {
+                const rolld20= document.getElementById('RollD20');
+                const dice = document.getElementById('dice-result');
+                const status = document.getElementById('recordStats').value;
+
+            rolld20.addEventListener('click', () => {
+                const status = parseInt(recordStats.value) || 0;
+                const resD20 = Math.floor(Math.random() * 20) + 1; // random number between 1 and 20
+                dice.textContent = status + resD20;
+
+                // animation
+                dice.classList.remove('scale-100');
+                dice.classList.add('scale-150');
+                setTimeout(() => {
+                    dice.classList.remove('scale-150');
+                    dice.classList.add('scale-100');
+                }, 200);
+            });
+        });        
+        </script>
+
+        <script defer>
+            document.addEventListener('DOMContentLoaded', () => {
+                const rolld100 = document.getElementById('RollD100');
+                const dice = document.getElementById('dice-result');
+                const status = document.getElementById('recordStats').value;
+
+            rolld100.addEventListener('click', () => {
+                const status = parseInt(recordStats.value) || 0;
+                const resD100 = Math.floor(Math.random() * 100) + 1; // random number between 1 and 100
+                dice.textContent = status + resD100;
+
+                // animation
+                dice.classList.remove('scale-100');
+                dice.classList.add('scale-150');
+                setTimeout(() => {
+                    dice.classList.remove('scale-150');
+                    dice.classList.add('scale-100');
+                }, 200);
+            });
+        });        
+        </script>
+
+        <button id="records-Btn" class="box-content size-4 border-2 p-4 m-4 rounded-lg sm:size-6 sm:rounded-2x1 text-center border-gold hover:bg-red-900 transition-colors">
+            <img src="src/paper.png" alt="Fichas" class="size-4 sm:size-6">
+        </button>
+
+        <div id="recordsLabel" class="hidden fixed top-0 left-0 min-h-screen w-24 sm:w-44 m-0 flex-col bg-crimson text-lightYellow shadow-lg items-center flex">
+            <li id="druidaRec" class="w-20 sm:w-32 h-8 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black sm:text-xl">Druida</li>
+            <li id="bardoRec" class="w-20 sm:w-32 h-8 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black sm:text-xl">Bardo</li>
+            <li id="paladinoRec" class="w-20 sm:w-32 h-8 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black sm:text-xl">Paladino</li>
+            <li id="magoRec" class="w-20 sm:w-32 h-8 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black sm:text-xl">Mago</li>
+            <li id="rangerRec" class="w-20 sm:w-32 h-8 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black sm:text-xl">Ranger</li>
+            <li id="clérigoRec" class="w-20 sm:w-32 h-8 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black sm:text-xl">Clérigo</li>
+            <li id="guerreiroRec" class="w-20 sm:w-32 h-8 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black sm:text-xl">Guerreiro</li>
+            <li id="barbaroRec" class="w-20 sm:w-32 h-8 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black sm:text-xl">Bárbaro</li>
+            <li id="ladraoRec" class="w-20 sm:w-32 h-8 top-8 mt-5 ml-2 rounded-lg bg-gold text-crimson placeholder-crimson p-1 hover:bg-brown font-Caudex font-black sm:text-xl">Ladrão</li>
+        </div>
+
+        <script>
+            const fichasBtn = document.getElementById('records-Btn');
+            const fichasLabel = document.getElementById('recordsLabel');
+            let recordsOpen = false;
+            
+            fichasBtn.addEventListener('click', (e) => {
+                fichasLabel.classList.toggle('hidden');
+                recordsOpen = !fichasLabel.classList.contains('hidden');
+            });
+
+            // Close Menu when click outside
+            document.addEventListener('click', (e) => {
+                if (recordsOpen && !fichasLabel.contains(e.target) && e.target !== fichasBtn) {
+                    recordsOpen = false;
+                    fichasLabel.classList.add('hidden');
+                }
+            }, true);
+        </script>
+
+        <button id="createRecords-Btn" class="box-content size-4 border-2 p-4 m-4 rounded-lg sm:size-6 sm:rounded-2x1 text-center border-gold hover:bg-red-900 transition-colors">
+            <img src="src/CriarFicha.png" alt="CriarFicha">
+        </button>
+
+        <button id="chat-Btn" class="box-content size-4 border-2 p-4 m-4 rounded-lg sm:size-6 sm:rounded-2x1 text-center border-gold hover:bg-red-900 transition-colors">
+            <img src="src/chat.png" alt="chat">
+        </button>
+
+        <div id="SideBarRight" class="hidden fixed right-0 top-0 min-h-screen w-72 sm:w-96 m-0 flex flex-col bg-crimson text-lightYellow shadow-lg items-center font-Caudex">
+
+            <div id="chatbox" class="flex-1 overflow-y-auto p-4">
+                <!-- Mensagens aparecerão aqui -->
+            </div>
+
+            <div id="sendMsg" class="flex p-4 border-t">
+                <input id="messageInput" type="text" class="flex-1 mr-4 p-2 border rounded placeholder-crimson bg-gold text-crimson w-20 sm:w-28" placeholder="Digite...">
+                <button id="sendButton" class="bg-brown text-crinsom px-4 py-2 rounded">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const menuLabel = document.getElementById('menu-left');
+        let menuOpen = false;
+            
+        menuBtn.addEventListener('click', (e) => {
+            menuLabel.classList.toggle('hidden');
+            menuOpen = !menuLabel.classList.contains('hidden'); 
+        });
+
+        // Close Menu when click outside
+        document.addEventListener('click', (e) => {
+            if (menuOpen && !menuLabel.contains(e.target) && e.target !== menuBtn) {
+                menuOpen = false;
+                menuLabel.classList.add('hidden');
+            }
+        }, true);
+    </script>
+
+    <!-- Ficha O Druida -->
+    <div class="hidden grid grid-cols-6 sm:grid-rows-7 grid-rows-2 gap-2 place-items-center min-h-screen min-w-screen" id="primeiraPagina-Druida">
+        <div class="col-span-2 sm:col-span-4 row-span-4 sm:row-span-7 col-start-3 sm:col-start-2 box-content size-auto border-2 rounded-lg sm:rounded-2x1 border-gold p-1 bg-white">
+            <input type="text" id="nomePersonagem" placeholder="Nome" class="flex font-black placeholder-white bg-black rounded-lg sm:rounded-2x1 placeholder:p-1 m-1 w-80 text-white">
+            <input type="number" id="forçaDruida" placeholder="FOR" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="drestrezaDruida" placeholder="DES" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="costituiçãoDruida" placeholder="COS" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="inteligenciaDruida" placeholder="INT" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="sabedoriaDruida" placeholder="SAB" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="carismaDruida" placeholder="CAR" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+
+            <select name="Paginas" id="paginas-druida" class="box-content border-2 border-black right-0 w-44 text-black name-black font-Caudex cursor-pointer hover:bg-black hover:text-white transition-colors">
+                <option id="primeiraPagDruida" value="primeiraPagina" selected class="text-black font-Caudex">1º Pagina</option>
+                <option id="segundaPagDruida" value="segundaPagina" class="font-Caudex">2º Pagina</option>
+            </select>
+            <p>
+                <span class="font-Caudex">DAMAGE</span><span class="m-2 bg-black text-white font-Caudex rounded-md"> D6 </span> <span class="ml-3 font-Caudex">ARMOR <input type="number" placeholder="0" class="placeholder:font-Caudex placeholder-white w-12 bg-black rounded-lg sm:rounded-2x1 placeholder:p-1 m-1 text-white"></span>
+                <span class="font-Caudex">LIFE <input type="number" placeholder="PV" class="placeholder:font-Caudex placeholder-white w-12 bg-black rounded-md placeholder:p-1 m-1 text-white"></span><span>
+                <span class="font-Caudex pr-1 text-sm border-2 border-black">Seu PV é 6+COS</span>
+            </p>
+           
+            <div class="grid-cols-2 grid-rows-7 gap-4 flex">
+                <div class="col-span-2 row-span-7">
+                    <p class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">ALINHAMENTOS</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">CAÓTICO</span></p>
+                    <p class="font-Caudex font-bold text-sm">Destruir um símbolo de civilização.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">BOM</span></p>
+                    <p class="font-Caudex font-bold text-sm">Ajudar alguma coisa ou alguém a crescer.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">NEUTRO</span></p>
+                    <p class="font-Caudex font-bold text-sm">Eliminar uma ameaça não natural.</p>
+                    <h1 class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">RAÇA</h1>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">ELFO</span></p>
+                    <p class="font-Caudex font-bold text-xs">A seiva das árvores antigas corre em seu corpo. Além <br>
+                    de quaisquer outras ligações, a Grande Floresta é sempre <br>
+                    considerada sua terra.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">HUMANO</span></p>
+                    <p class="font-Caudex font-bold text-xs">Assim como seu povo aprendeu a vincular os animais ao <br>
+                    campo e à fazenda, você também se encontra vinculado <br>
+                    a eles. Você sempre será capaz de assumir a forma de <br>
+                    qualquer animal domesticado, além de suas opções <br>
+                    normais.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">HALFLING</span></p>
+                    <p class="font-Caudex font-bold text-xs">Você canta as canções restauradoras da primavera e do <br>
+                    riacho. Sempre que montar acampamento, você e seus <br>
+                    aliados curam +1d6</p>
+                    <h1 class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">VÍNCULOS</h1>
+                    <p class="font-Caudex font-bold text-xs m-1">Preencha pelo menos um dos espaços em branco com o <br>
+                    nome de algum companheiro:</p>
+                    <p class="font-Caudex font-bold text-xs">• <input type="text" class="border-2 border-black w-20" placeholder="..."> tem cheiro de caça, e não de <br>
+                    caçador.</p>
+                    <p class="font-Caudex font-bold text-xs">• Os espíritos me alertaram acerca de um grande perigo <br>
+                    que ronda <input type="text" class="border-2 border-black">.</p>
+                    <p class="font-Caudex font-bold text-xs">• Eu mostrei a <input type="text" class="border-2 border-black w-20"> um ritual secreto <br>
+                    da Terra</p>
+                    <p class="font-Caudex font-bold text-xs">• <input type="text" class="border-2 border-black"> provou meu sangue, e eu o seu. <br>
+                    Estamos unidos por isso.</p>
+                    <p class="font-Caudex font-bold text-sm"><input type="number" class="border-2 border-black w-10 placeholder-black" placeholder="1"> Suba de nivel com seu lvl atual + 7 de XP</p>
+                </div>
+                <div class="col-span-2 row-span-7">
+                    <h1 class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">MOVIMENTOS INICIAIS</h1>
+                    <p class="font-Caudex font-bold text-10px">Você começa com o seguintes movimentos.</p>
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> NASCIDO DO SOLO</p>
+                    <p class="font-Caudex font-bold text-xs">Você aprendeu sua magia em um local cujos espíritos são poderosos e antigos, e eles <br>
+                    o marcaram como um deles. Independente de onde vá, eles vivem dentro de você, e o <br>
+                    permitirão assumir suas formas. Escolha uma das opções a seguir – ela representa a <br>
+                    terra a qual você se encontra ligado. Sempre que se metamorfosear, você será capaz de <br>
+                    assumir a forma de qualquer animal que vive em sua terra.</p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black">A Grande Floresta 
+                        <span><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black ml-5 sm:ml-10">Planices Sussurantes</span>
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black">O Vasto Deserto
+                        <span><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black ml-6 sm:ml-12">O Lamaçal Fedorento</span>
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black">O Delta do Rio
+                        <span><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black ml-8 sm:ml-14">As Profundezas da Terra</span>
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black">As Ilhas de Safíra 
+                        <span><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black ml-5 sm:ml-10">O Mar Aberto</span>
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black">As Montanhas Elevadas 
+                        <span><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black">O Norte Gelado</span>
+                    </p>
+                    <p class="font-Caudex font-bold text-xs"><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black">A Terra Devastada</p>
+                    <p class="font-Caudex font-bold text-xs">Escolha uma marca – um atributo físico que o identifica como um nascido do solo. </p>
+                    <p class="font-Caudex text-xs">Pode ser uma característica animal como antenas, ou as manchas de um leopardo, ou algo <br>
+                    mais genérico, como cabelos que se parecem com folhas, ou olhos de cristal brilhante. Sua <br>
+                    marca permanece independente da forma que assumir.</p>
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> NUTRIDO PELA NATUREZA</p>
+                    <p class="font-Caudex text-xs">Você não precisa comer ou beber nada. Se um movimento exigir que você marque uma ração, <br>
+                    simplesmente ignore isso.</p> 
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> LINGUAGEM DOS ESPÍRITOS</p>
+                    <p class="font-Caudex text-xs">Os grunhidos, latidos, guinchos e chamados das criaturas selvagens são uma forma de <br>
+                    linguagem para você. Você é capaz de compreender qualquer animal nativo da sua terra ou <br>
+                    que seja similar a algum cuja essência tenha estudado</p>
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> METAMORFOSE (SAB)</p>
+                    <p class="font-Caudex text-xs"><span class="font-bold">Quando chamar os espíritos para mudar sua forma, role+SAB. Com 10+</span>, domínio 3. <span class="font-bold">Com <br>
+                    7-9,</span> domínio 2. <span class="font-bold">Com 6-,</span> domínio 1 além de qualquer outra coisa definida pelo MJ. <br>
+                    Você consegue assumir a forma de qualquer espécie cuja essência tenha estudado ou que viva <br>
+                    em sua terra, fundindo sua própria forma e seus pertences em uma cópia perfeita da espécie <br>
+                    desejada. Com isso, você adquire quaisquer habilidades e fraquezas inatas do animal: garras, <br>
+                    asas, guelras, respirar na água e não no ar. Continue usando suas próprias características, <br>
+                    mas alguns movimentos podem se tornar mais complicados de serem iniciados – um gato <br>
+                    doméstico terá dificuldades em combater um ogro. O MJ também lhe informará a respeito de <br>
+                    um ou mais movimentos associados à sua nova forma. Gaste 1 domínio para realizar aquele <br>
+                    movimento. Assim que seu domínio se esgotar, você retorna à sua forma natural. É possível <br>
+                    fazer isso também gastando todo o seu domínio.</p>
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> ESSENCIA ESTUDADA</p>
+                    <p class="font-Caudex text-xs"><span class="font-bold">Quando passar algum tempo contemplando um espírito animal,</span> você pode adicioná-lo às <br>
+                    espécies cuja forma é capaz de assumir através de metamorfose.</p>
+                </div>
+            </div>           
+        </div>
+    </div>
+    <div class="hidden grid grid-cols-6 sm:grid-rows-7 grid-rows-2 gap-2 place-items-center min-h-screen min-w-screen" id="segundaPag-Druida">
+        <div class="col-span-2 sm:col-span-4 row-span-4 sm:row-span-7 col-start-3 sm:col-start-2 box-content size-auto border-2 rounded-lg sm:rounded-2x1 border-gold p-1 bg-white">
+            <p class="font-Caudex font-bold bg-black text-white rounded pl-1">
+                EQUIPAMENTO
+                <span class="left-0 ml-44">CARGA <input type="number" placeholder="Atual" class="box-content border-2 border-black w-16 placeholder-black placeholder:p-2 text-black">
+                <input type="number" placeholder="Max" class="box-content border-2 border-black w-16 placeholder-black placeholder:p-2 text-black"></span>
+            </p>
+            <select name="Paginas" id="paginas-druida" class="box-content border-2 border-black right-0 w-44 text-black name-black font-Caudex cursor-pointer hover:bg-black hover:text-white transition-colors">
+                <option id="primeiraPagDruida" value="primeiraPagina" selected class="text-black font-Caudex">1º Pagina</option>
+                <option id="segundaPagDruida" value="segundaPagina" class="font-Caudex">2º Pagina</option>
+            </select>
+            <div class="grid-cols-2 grid-rows-7 gap-4 flex">
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-sm"><span class="font-bold">Sua carga é igual 6+FOR.</span>Você carrega alguma lembrança de sua terra. <br>
+                    Descreva-a. </p>
+                    <p class="font-Caudex text-sm font-bold">Escolha um:</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Equipamento de aventureiro (carga 5, peso 1)</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Cachimbo halfling (peso 0)</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Cataplasmas e ervas (carga 2, peso 1)</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Antitoxinas (carga 3, peso 0)</p>
+                </div>
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-sm font-bold">Escolha seu armamento:</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Shillelagh (corpo a corpo, peso 2)</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Cajado (corpo a corpo, duas mãos, peso 1)</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Lança (corpo a corpo, arremesso, próxima, peso 1)</p>
+                    <p class="font-Caudex text-sm font-bold">Escolha suas defesas:</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Armadura de peles (armadura 1, peso 1)</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Escudo de madeira (armadura +1, peso 1)</p>
+                </div>
+            </div>
+            <p class="font-Caudex font-bold bg-black text-white rounded pl-1">
+                MOVIMENTO AVANÇADOS
+            </p>
+            <div class="grid-cols-2 grid-rows-7 gap-4 flex">
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-xs font-bold m-1">Quando ganhar um nível entre 2 e 5, escolha um dos seguintes movimentos:</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">IRMÃO DO CAÇADOR</span></p>
+                    <p class="font-Caudex text-xs">Escolha um movimento da lista de classe do ranger</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">GARRAS E DENTES VERMELHOS</span></p>
+                    <p class="font-Caudex text-xs">Quando estiver em uma forma animal apropriada(alguma bem perigosa), aumen- <br>te seu dano para d8.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">COMUNHÃO DOS SUSSURROS (SAB)</span></p>
+                    <p class="font-Caudex text-xs">Quando passar algum tempo em um local, observando seus espíritos residentes e <br>
+                    convocando os espíritos de sua terra, <span class="font-bold">role+SAB.</span> Você receberá uma visão impor-<br>tante a respeito de si próprio, de seus aliados, e dos espíritos ao seu redor. <span class="font-bold">Com <br>
+                    10+,</span> a visão será clara e útil. <span class="font-bold">Com 7-9,</span> a visão é pouco clara, e seu significado <br>
+                    nebuloso. <span class="font-bold">Com 6-,</span> a visão é incômoda, aterrorizante ou traumatizante. O MJ irá <br>
+                    descrevê-la. Receba -1 adiante</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">PELE DE MADEIRA</span></p>
+                    <p class="font-Caudex text-xs">Enquanto seus pés estiverem tocando o solo, receba +1 de armadura.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">OLHOS DO TIGRE</span></p>
+                    <p class="font-Caudex text-xs">Quando marcar um animal (com lama, poeira ou sangue) você poderá enxergar <br>
+                    através dos olhos dele como se fossem os seus, independente da distância que os <br>
+                    separar. Apenas um animal pode ser marcado dessa forma por vez.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">TROCAR A PELE</span></p>
+                    <p class="font-Caudex text-xs">Quando receber danos enquanto estiver metamorfoseado, você pode optar por <br>
+                    retornar à sua forma natural para negar todo o dano.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">FALAR COM COISAS</span></p>
+                    <p class="font-Caudex text-xs">Você enxerga os espíritos da areia, do mar e da pedra, e pode agora aplicar sua <br>
+                    linguagem dos espíritos, metamorfose e estudar essência em objetos inanimados <br>
+                    naturais (plantas e rochas) ou criaturas criadas, assim como faz com os animais. <br>
+                    As formas adotadas por aqueles que podem falar com coisas podem ser cópias <br>
+                    exatas ou vagamente humanoides e móveis.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">CRIADOR DE FORMAS</span></p>
+                    <p class="font-Caudex text-xs">Quando se metamorfosear, escolha uma habilidade: você recebe +1 constante em <br>
+                    rolamentos que a utilizem enquanto mantiver a outra forma. O MJ também vai <br>
+                    escolher uma habilidade, e você receberá -1 constante nela enquanto permanecer <br>
+                    metamorfoseado.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">MAESTRIA ELEMENTAL (SAB)</span></p>
+                    <p class="font-Caudex text-xs">Quando invocar os espíritos primordiais do fogo, água, terra, ou ar para realizar <br>
+                    uma tarefa em seu nome, <span class="font-bold">role+SAB. Com 10+,</span> escolha 2. <span class="font-bold">Com 7-9,</span> escolha 1. <br>
+                    <span class="font-bold">Com 6-,</span> seu chamado resulta em alguma catástrofe. <br>
+                    • O efeito desejado ocorre <br>
+                    • Você evita pagar o preço cobrado pela natureza <br>
+                    • Você permanece no controle da situação</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">EQUILÍBRIO</span></p>
+                    <p class="font-Caudex text-xs">Quando causar dano, receba equilíbrio 1. Quando tocar alguém e canalizar os <br>
+                    espíritos da vida, você poderá gastar equilíbrio. Para cada equilíbrio gasto, cure <br>
+                    1d4 PV</p>
+                </div>
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-xs font-bold m-1">Quando ganhar um nível entre 6 e 10, escolha um dos seguintes movimentos ou <br>
+                    um dos movimentos de níveis 2-5:</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">ADOTAR FORMA ALGUMA</span></p>
+                    <p class="font-Caudex text-xs">Quando se metamorfosear, role 1d4 e some o resultado ao seu domínio.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">DANÇA DO DOPPLEGÄNGER</span></p>
+                    <p class="font-Caudex text-xs">Você se torna capaz de estudar a essência de indivíduos específicos e assumir suas <br>
+                    formas exatas, incluindo homens, elfos e similares. É possível suprimir sua marca, <br>
+                    mas se o fizer, receba -1 constante até retornar à sua própria forma. <br>
+                    </p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">SANGUE E TROVÃO</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Garras e Dentes Vermelhos <br>
+                    Quando estiver em uma forma animal apropriada(alguma bem perigosa), aumen- <br> te seu dano para d10.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">O SONO DO DRUIDA</span></p>
+                    <p class="font-Caudex text-xs">Quando escolher este movimento, na próxima oportunidade em que estiver à sal- <br> vo e puder passar algum tempo em um local apropriado, você pode se ligar a uma <br>
+                    nova terra. Este efeito acontece apenas uma vez e o MJ lhe dirá quanto tempo vai <br>
+                    levar e qual o preço que você deverá pagar. Daquele momento em diante, você <br>
+                    será considerado nascido do solo de ambas as terras.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">FALAR COM O MUNDO</span></p>
+                    <p class="font-Caudex text-xs">Requer: Falar com Coisas <br>
+                    Você consegue enxergar os padrões que formam o tecido do mundo, e torna-se <br>
+                    capaz de aplicar sua linguagem dos espíritos, metamorfose e estudar essência aos <br>
+                    elementos puros – fogo, água, ar e terra.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">IRMÃ DO ESPREITADOR</span></p>
+                    <p class="font-Caudex text-xs">Escolha um movimento da lista de classe do ranger.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">MOLDADOR DE FORMAS</span></p>
+                    <p class="font-Caudex text-xs">Requer: Criador de Formas <br>
+                    Você pode aumentar sua armadura em 1 ou causar +1d4 de dano quando estiver <br>
+                    em uma forma animal. Escolha um dos dois quando se metamorfosear.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">QUIMERA</span></p>
+                    <p class="font-Caudex text-xs">Quando se metamorfosear, você pode criar uma forma mista que reúne até três <br>
+                    formas diferentes. É possível tornar-se um urso com asas de águia e a cabeça de <br>
+                    um bode, por exemplo. Cada característica lhe concederá um movimento dife- <br> rente. Sua forma quimérica segue normalmente as outras regras de metamorfose.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">TECER O CLIMA</span></p>
+                    <p class="font-Caudex text-xs">Quando se encontrar sob o céu aberto enquanto o sol estiver nascendo, o MJ lhe <br>
+                    perguntará como será o clima ao longo daquele dia. Diga o que quiser, e isso irá <br>
+                    acontecer.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const druidaBtn = document.getElementById('druidaRec');
+        const druidaLabel = document.getElementById('primeiraPagina-Druida');
+        let druidaOpen = false;
+            
+        druidaBtn.addEventListener('click', (e) => {
+            druidaLabel.classList.toggle('hidden');
+            druidaOpen = !druidaLabel.classList.contains('hidden');
+        }, true);
+    </script>
+
+    <!-- Ficha O Bardo -->
+
+     <div class="hidden grid grid-cols-6 sm:grid-rows-7 grid-rows-2 gap-2 place-items-center min-h-screen min-w-screen" id="primeiraPagina-Bardo">
+        <div class="col-span-2 sm:col-span-4 row-span-4 sm:row-span-7 col-start-3 sm:col-start-2 box-content size-auto border-2 rounded-lg sm:rounded-2x1 border-gold p-1 bg-white">
+            <input type="text" id="nomePersonagem" placeholder="Nome" class="flex font-black placeholder-white bg-black rounded-lg sm:rounded-2x1 placeholder:p-1 m-1 w-80 text-white">
+            <input type="number" id="forçaDruida" placeholder="FOR" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="drestrezaDruida" placeholder="DES" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="costituiçãoDruida" placeholder="COS" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="inteligenciaDruida" placeholder="INT" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="sabedoriaDruida" placeholder="SAB" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="carismaDruida" placeholder="CAR" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+
+            <select name="Paginas" id="paginas-druida" class="box-content border-2 border-black right-0 w-44 text-black name-black font-Caudex cursor-pointer hover:bg-black hover:text-white transition-colors">
+                <option id="primeiraPagBardo" value="primeiraPagina" selected class="text-black font-Caudex">1º Pagina</option>
+                <option id="segundaPagBardo" value="segundaPagina" class="font-Caudex">2º Pagina</option>
+            </select>
+            <p>
+                <span class="font-Caudex">DAMAGE</span><span class="m-2 bg-black text-white font-Caudex rounded-md"> D6 </span> <span class="ml-3 font-Caudex">ARMOR <input type="number" placeholder="0" class="placeholder:font-Caudex placeholder-white w-12 bg-black rounded-lg sm:rounded-2x1 placeholder:p-1 m-1 text-white"></span>
+                <span class="font-Caudex">LIFE <input type="number" placeholder="PV" class="placeholder:font-Caudex placeholder-white w-12 bg-black rounded-md placeholder:p-1 m-1 text-white"></span><span>
+                <span class="font-Caudex pr-1 text-sm border-2 border-black">Seu PV é 6+COS</span>
+            </p>
+           
+            <div class="grid-cols-2 grid-rows-7 gap-4 flex">
+                <div class="col-span-2 row-span-7">
+                    <p class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">ALINHAMENTOS</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">BOM</span></p>
+                    <p class="font-Caudex font-bold text-sm">Executar sua arte para ajudar ...</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">NEUTRO</span></p>
+                    <p class="font-Caudex font-bold text-sm">Evitar um conflito ou desfaça ...</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">CAÓTICO</span></p>
+                    <p class="font-Caudex font-bold text-sm">Estimular outros a realizarem uma ação decisiva que <br>
+                    seja significativa e mal planejada.</p>
+
+                    <h1 class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">RAÇA</h1>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">ELFO</span></p>
+                    <p class="font-Caudex font-bold text-xs">Quando entrar em um local importante (decisão do <br>
+                    jogador), você pode pedir ao MJ que lhe conte um fato <br>
+                    qualquer a respeito da história daquele lugar.
+                    </p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">HUMANO</span></p>
+                    <p class="font-Caudex font-bold text-xs">Quando entrar pela primeira vez em um local civilizado, <br>
+                    alguém que respeita os costumes de hospitalidade aos <br>
+                    menestréis irá recebê-lo como seu convidado.</p>
+
+                    <h1 class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">VÍNCULOS</h1>
+                    <p class="font-Caudex font-bold text-xs m-1">Preencha pelo menos um dos espaços em branco com o <br>
+                    nome de algum companheiro:</p>
+                    <p class="font-Caudex font-bold text-xs">• Esta não é minha primeira aventura com <input type="text" class="border-2 border-black w-20" placeholder="...">.</p>
+
+                    <p class="font-Caudex font-bold text-xs">• Já cantei histórias sobre <input type="text" class="border-2 border-black"> <br>
+                    bem antes de nos conhecermos pessoalmente.</p>
+
+                    <p class="font-Caudex font-bold text-xs">• <input type="text" class="border-2 border-black w-20">  é normalmente o alvo de minhas <br>
+                    piadas.</p>
+
+                    <p class="font-Caudex font-bold text-xs">• Estou escrevendo uma balada a respeito das aventuras <br>
+                    de <input type="text" class="border-2 border-black">.</p>
+
+                    <p class="font-Caudex font-bold text-xs">• <input type="text" class="border-2 border-black"> me confidenciou um segredo.</p>
+
+                    <p class="font-Caudex font-bold text-xs">• <input type="text" class="border-2 border-black"> não confia em mim, e com boas <br>
+                    razões.</p>
+
+                    <p class="font-Caudex font-bold text-sm"><input type="number" class="border-2 border-black w-10 placeholder-black" placeholder="1"> Suba de nivel com seu lvl atual + 7 de XP</p>
+
+                </div>
+                <div class="col-span-2 row-span-7">
+                    <h1 class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">MOVIMENTOS INICIAIS</h1>
+                    <p class="font-Caudex font-bold text-10px">Você começa com o seguintes movimentos.</p>
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> ARTE ARCANA (CAR)</p>
+                    <p class="font-Caudex text-xs"><span class="font-bold">Quando tecer um feitiço básico a partir de uma performance, escolha um</span> <br>
+                    aliado e um efeito: <br>
+                    • Curar 1d8 PV; <br>
+                    • +1d4 adiante para o dano; <br>
+                    • Remover um encantamento que esteja afetando sua mente; <br>
+                    • Na próxima vez que alguém Ajudar o alvo, ele receberá +2, e não +1; <br>
+                    E depois role+CAR. Com 10+, o aliado recebe o efeito selecionado. Com <br>
+                    7-9, sua magia funciona, mas você atrai atenção indesejável, ou a sua magia <br>
+                    reverbera para outros alvos à escolha do MJ, afetando-os também</p>
+
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> CONHECIMENTO DE BARDO</p></p>
+
+                    <p class="font-Caudex font-bold text-10px">
+                        Escolha uma área de especialização:
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Magias e Feitiços;
+                    </p>
+                   <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Os Mortos e os Mortos-Vivos;
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Grandes Histórias do Mundo Conhecido;
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Um Bestiário de Criaturas Incomuns;
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">As Esferas Planares;
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Lendas de Heróis do Passado;
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black"> Os Deuses e seus Servos;
+                    </p>
+                    <p class="font-Caudex text-xs"><span class="font-bold">Quando encontrar pela primeira vez uma criatura, local ou item importante</span> <br>
+                    (decisão do jogador) que esteja ligado ao seu conhecimento de bardo, você <br>
+                    pode fazer uma pergunta qualquer ao MJ a respeito daquilo, que ele deve <br>
+                    responder honestamente. O MJ pode lhe perguntar qual foi a lenda, canção <br>
+                    ou fábula na qual você ouviu tal informação.</p>
+
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> CHARMOSO(A) E RECEPTIVO(A)</p>
+                    <p class="font-Caudex text-xs">Quando conversar francamente com alguém, você pode fazer ao seu jogador <br>
+                    uma pergunta da lista abaixo, que deve ser respondida com honestidade. <br>
+                    Aquele jogador então poderá também lhe fazer uma pergunta da lista abaixo <br>
+                    (que você também precisa responder honestamente): <br>
+                    • A quem você serve? <br>
+                    • O que você quer que eu faça? <br>
+                    • Como faço para conseguir que você <input type="text" class="border-2 border-black w-20"> <br>
+                    • O que você realmente está sentindo agora? <br>
+                    • O que você mais deseja?</p>
+
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> UM PORTO NA TEMPESTADE</p>
+                    <p class="font-Caudex text-xs">Quando retornar a um local civilizado que já tenha visitado previamente, <br>
+                    diga ao MJ quando esteve aqui pela última vez. Ele lhe responderá quais <br>
+                    foram as mudanças ocorridas desde aquela época</p>
+                </div>
+            </div>           
+        </div>
+    </div>
+    <div class="hidden grid grid-cols-6 sm:grid-rows-7 grid-rows-2 gap-2 place-items-center min-h-screen min-w-screen" id="segundaPag-Bardo">
+        <div class="col-span-2 sm:col-span-4 row-span-4 sm:row-span-7 col-start-3 sm:col-start-2 box-content size-auto border-2 rounded-lg sm:rounded-2x1 border-gold p-1 bg-white">
+            <p class="font-Caudex font-bold bg-black text-white rounded pl-1">
+                EQUIPAMENTO
+                <span class="left-0 ml-44">CARGA <input type="number" placeholder="Atual" class="box-content border-2 border-black w-16 placeholder-black placeholder:p-2 text-black">
+                <input type="number" placeholder="Max" class="box-content border-2 border-black w-16 placeholder-black placeholder:p-2 text-black"></span>
+            </p>
+            <select name="Paginas" id="paginas-druida" class="box-content border-2 border-black right-0 w-44 text-black name-black font-Caudex cursor-pointer hover:bg-black hover:text-white transition-colors">
+                <option id="primeiraPagDruida" value="primeiraPagina" class="text-black font-Caudex">1º Pagina</option>
+                <option id="segundaPagDruida" value="segundaPagina" class="font-Caudex" selected>2º Pagina</option>
+            </select>
+            <div class="grid-cols-2 grid-rows-7 gap-4 flex">
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-sm"><span class="font-bold">Sua carga é igual 9+FOR.</span>Você possui rações de masmorra <br>
+                    (carga 5, peso 1). </p>
+                    <p class="font-Caudex text-sm font-bold">Escolha um instrumento, todos eles possuem peso 0 para você:</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">O bandolim restaurado de seu pai;</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Uma bela flauta, presente de um nobre;</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">A gaita com a qual cortejou seu primeiro amor;</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Uma corneta roubada;</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Uma rabeca que nunca foi tocada;</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Um livro de canções, escrito em uma língua esquecida.</p>
+
+                    <p class="font-Caudex text-sm font-bold">Escolha sua roupa:</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Armadura de couro (armadura 1, peso 1);</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Roupas ostensivas (peso 0).</p>
+                </div>
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-sm font-bold">Escolha seu armamento:</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Florete de duelo (corpo a corpo, preciso, peso 2);</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Arco desgastado (próximo, peso 2), <br>
+                    Fardo de flechas (munição mmm, peso 1) <br>
+                    e Espada curta (corpo a corpo, Peso 1)</p>
+
+                    <p class="font-Caudex text-sm font-bold">Escolha um:</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Equipamento de aventureiro(carga 5, peso 1);</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Bandagens (peso 0);</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Cachimbo Halfling (peso 0);</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">3 moedas.</p>
+                </div>
+            </div>
+            <p class="font-Caudex font-bold bg-black text-white rounded pl-1">
+                MOVIMENTO AVANÇADOS
+            </p>
+            <div class="grid-cols-2 grid-rows-7 gap-4 flex">
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-xs font-bold m-1">Quando ganhar um nível entre 2 e 5, escolha um dos seguintes movimentos:</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">CANÇÃO DA CURA</span></p>
+                    <p class="font-Caudex text-xs">Quando curar usando arte arcana, cure +1d8 de dano.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">CACOFONIA VIOLENTA</span></p>
+                    <p class="font-Caudex text-xs">Quando conceder bônus para o dano usando arte arcana, conceda +1d4 de dano extra.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">VOLUME MÁXIMO (CAR)</span></p>
+                    <p class="font-Caudex text-xs">Quando desencadear uma performance ensandecida (um solo de flauta inflamado, uma <br>
+                    explosão de tambores de bronze, uma dança interpretativa confusa), escolha um alvo capaz <br>
+                    de ouvi-lo e role+CAR. Com 10+, o alvo fica confuso e ataca seu aliado mais próximo. Com <br>
+                    7-9, o alvo ainda ataca seu aliado mais próximo, mas você atrai sua atenção e sua ira.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">GRITO METÁLICO (CON)</span></p>
+                    <p class="font-Caudex text-xs">Quando gritar com muita força ou tocar uma nota devastadora, escolha um alvo e <br>
+                    role+CON. Com 10+, o alvo recebe 1d10 de dano e é ensurdecido por alguns minutos. <br>
+                    Com 7-9, você ainda causa dano ao seu alvo, mas perde o controle, e o MJ escolhe um alvo <br>
+                    adicional que esteja próximo</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">UMA PEQUENA AJUDA DE MEUS AMIGOS</span></p>
+                    <p class="font-Caudex text-xs">Quando conseguir ajudar alguém, receba +1 adiante também.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">TONS SOBRENATURAIS</span></p>
+                    <p class="font-Caudex text-xs">Sua arte arcana é poderosa, permitindo que escolha dois efeitos no lugar de apenas um.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">ROSTO INESQUECÍVEL</span></p>
+                    <p class="font-Caudex text-xs">Quando encontrar alguém com quem já tenha se encontrado anteriormente (decisão do <br>
+                    jogador) após terem passado algum tempo sem se ver, receba +1 adiante contra essa pessoa</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">APARO DO DUELISTA</span></p>
+                    <p class="font-Caudex text-xs">Quando matar e pilhar, receba +1 adiante de armadura.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">MISTIFICAR</span></p>
+                    <p class="font-Caudex text-xs">Quando negociar com um alvo, caso obtenha 7+, receba também +1 adiante contra ele.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">AMADOR EM MULTICLASSE</span></p>
+                    <p class="font-Caudex text-xs">Escolha e adquira um movimento de outra classe. Trate seu nível como se fosse nível -1 no <br>
+                    momento da escolha.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">INICIADO EM MULTICLASSE</span></p>
+                    <p class="font-Caudex text-xs">Escolha e adquira um movimento de outra classe. Trate seu nível como se fosse nível -1 no <br>
+                    momento da escolha.</p>
+                </div>
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-xs font-bold m-1">Quando ganhar um nível entre 6 e 10, escolha um dos seguintes movimentos ou <br>
+                    um dos movimentos de níveis 2-5:</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">REFRÃO DA CURA</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Canção da Cura <br>
+                    Quando curar usando arte arcana, cure +2d8 de dano.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">EXPLOSÃO SONORA VIOLENTA</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Cacofonia Violenta <br>
+                    Quando conceder bônus para o dano usando arte arcana, conceda +2d4 de dano extra.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">REPUTAÇÃO (CAR)</span></p>
+                    <p class="font-Caudex text-xs">Quando encontrar pela primeira vez pessoas que já tenham ouvido canções a seu respeito, <br>
+                    role+CAR. Com 10+, diga ao MJ duas coisas que elas saberiam a seu respeito. Com 7-9, <br>
+                    diga ao MJ uma coisa, e ele dirá outra.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">ACORDE SOBRENATURAL</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Tons Sobrenaturais <br>
+                    Quando usar arte arcana, escolha dois efeitos no lugar de apenas um. Escolha também um <br>
+                    desses dois efeitos para ser aplicado em dobro.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">OUVIDO BOM PARA MAGIA</span></p>
+                    <p class="font-Caudex text-xs">Quando ouvir um inimigo conjurar uma magia, o MJ lhe dirá qual é o nome da magia e seus <br>
+                    efeitos. Receba +1 adiante quando agir de acordo com essas informações.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">DESLEAL</span></p>
+                    <p class="font-Caudex text-xs">Quando for charmoso(a) e receptivo(a), você também pode perguntar “Como você seria <br>
+                    vulnerável a mim?”. Seu alvo não pode lhe fazer esta pergunta.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">BLOQUEIO DO DUELISTA</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Aparo do Duelista <br>
+                    Quando matar e pilhar, receba +2 adiante de armadura</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">PASSAR A PERNA</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Mistificar <br>
+                    Quando negociar com um alvo, com 7+, receba também +1 adiante contra ele e faça ao seu <br>
+                    jogador uma pergunta que deve ser respondida honestamente.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">MESTRE EM MULTICLASSE</span></p>
+                    <p class="font-Caudex text-xs">Escolha e adquira um movimento de outra classe. Trate seu nível como se fosse nível -1 no <br>
+                    momento da escolha.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const bardoBtn = document.getElementById('bardoRec');
+        const bardoLabel = document.getElementById('primeiraPagina-Bardo');
+        let bardoOpen = false;
+            
+        bardoBtn.addEventListener('click', (e) => {
+            bardoLabel.classList.toggle('hidden');
+            bardoOpen = !bardoLabel.classList.contains('hidden');
+        }, true);
+    </script>
+
+    <!-- Ficha Paladino -->
+
+    <div class="hidden grid grid-cols-6 sm:grid-rows-7 grid-rows-2 gap-2 place-items-center min-h-screen min-w-screen" id="primeiraPagina-Paladino">
+        <div class="col-span-2 sm:col-span-4 row-span-4 sm:row-span-7 col-start-3 sm:col-start-2 box-content size-auto border-2 rounded-lg sm:rounded-2x1 border-gold p-1 bg-white">
+            <input type="text" id="nomePersonagem" placeholder="Nome" class="flex font-black placeholder-white bg-black rounded-lg sm:rounded-2x1 placeholder:p-1 m-1 w-80 text-white">
+            <input type="number" id="forçaDruida" placeholder="FOR" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="drestrezaDruida" placeholder="DES" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="costituiçãoDruida" placeholder="COS" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="inteligenciaDruida" placeholder="INT" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="sabedoriaDruida" placeholder="SAB" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="carismaDruida" placeholder="CAR" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+
+            <select name="Paginas" id="paginas-druida" class="box-content border-2 border-black right-0 w-44 text-black name-black font-Caudex cursor-pointer hover:bg-black hover:text-white transition-colors">
+                <option id="primeiraPagBardo" value="primeiraPagina" selected class="text-black font-Caudex">1º Pagina</option>
+                <option id="segundaPagBardo" value="segundaPagina" class="font-Caudex">2º Pagina</option>
+            </select>
+            <p>
+                <span class="font-Caudex">DAMAGE</span><span class="m-2 bg-black text-white font-Caudex rounded-md"> D10 </span> <span class="ml-3 font-Caudex">ARMOR <input type="number" placeholder="0" class="placeholder:font-Caudex placeholder-white w-12 bg-black rounded-lg sm:rounded-2x1 placeholder:p-1 m-1 text-white"></span>
+                <span class="font-Caudex">LIFE <input type="number" placeholder="PV" class="placeholder:font-Caudex placeholder-white w-12 bg-black rounded-md placeholder:p-1 m-1 text-white"></span><span>
+                <span class="font-Caudex pr-1 text-sm border-2 border-black">Seu PV é 10+COS</span>
+            </p>
+           
+            <div class="grid-cols-2 grid-rows-7 gap-4 flex">
+                <div class="col-span-2 row-span-7">
+                    <p class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">ALINHAMENTOS</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">ORDEIRO</span></p>
+                    <p class="font-Caudex font-bold text-sm">Negar misericórdia a um criminoso ou infiel.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">BOM</span></p>
+                    <p class="font-Caudex font-bold text-sm">Colocar-se em perigo para proteger alguém mais fraco.</p>
+
+                    <h1 class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">RAÇA</h1>
+
+                    <p><span class="font-Caudex font-bold text-lg">HUMANO</span></p>
+                    <p class="font-Caudex font-bold text-xs">Quando fizer uma oração, pedindo à sua divindade que o <br>
+                    guie, mesmo que por um momento, e perguntar “O que é <br>
+                    maligno aqui?”, o MJ lhe responderá honestamente.</p>
+
+                    <h1 class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">VÍNCULOS</h1>
+                    <p class="font-Caudex font-bold text-xs m-1">Preencha pelo menos um dos espaços em branco com o <br>
+                    nome de algum companheiro:</p>
+                    <p class="font-Caudex font-bold text-xs">• O comportamento inadequado de <input type="text" class="border-2 border-black w-20" placeholder="..."> <br>
+                    coloca em risco sua própria alma!</p>
+
+                    <p class="font-Caudex font-bold text-xs">• <input type="text" class="border-2 border-black"> já batalhou ao meu lado e <br>
+                    tem minha total confiança.</p>
+
+                    <p class="font-Caudex font-bold text-xs">• Eu respeito as crenças de <input type="text" class="border-2 border-black w-20">, <br>
+                    mas espero que ele(a) enxergue a verdade um dia.</p>
+
+                    <p class="font-Caudex font-bold text-xs">• <input type="text" class="border-2 border-black">  é uma alma corajosa, <br>
+                    uma pessoa com a qual tenho muito o que aprender.</p>
+
+                    <p class="font-Caudex font-bold text-sm"><input type="number" class="border-2 border-black w-10 placeholder-black" placeholder="1"> Suba de nivel com seu lvl atual + 7 de XP</p>
+
+                </div>
+                <div class="col-span-2 row-span-7">
+                    <h1 class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">MOVIMENTOS INICIAIS</h1>
+                    <p class="font-Caudex font-bold text-10px">Você começa com o seguintes movimentos.</p>
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> IMPOR AS MÃOS (CAR)</p>
+                    <p class="font-Caudex text-xs"><span class="font-bold">Quando tocar alguém, pele com pele, e rezar por seu bem estar, role+CAR. Com 10+</span> <br>
+                    você cura 1d8 de dano ou remove uma doença. Com 7-9, a cura acontece, mas <br>
+                    o dano ou a doença é transferido para você.</p>
+
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> FORTIFICADO</p></p>
+                    <p class="font-Caudex font-bold text-10px">
+                        Ignore o rótulo “desajeitada” em qualquer armadura que você usar.
+                    </p>
+
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> EU SOU A LEI</p></p>
+                    <p class="font-Caudex font-bold text-xs">Quando der uma ordem a um PNJ baseado em sua autoridade divina, role+CAR. <br>
+                    Com 7-9, ele escolhe uma das opções abaixo: <br>
+                    • Faz o que foi mandado; <br>
+                    • Recua cuidadosamente, depois foge; <br>
+                    • Ataca você. <br>
+                    Com 10+, você também recebe +1 adiante contra o PNJ. Com 6-, o alvo faz o que <br>
+                    bem entender, e você recebe -1 adiante contra ele.</p>
+
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> BUSCA</p>
+                    <p class="font-Caudex font-bold text-xs">Quando você se dedicar a uma missão através da oração e da purificação espiritual, <br>
+                    diga o que pretende fazer:</p>
+                    <p class="font-Caudex font-bold text-xs">• Destruir <input type="text" class="border-2 border-black w-20">, um terrível mal que se abate sobre a terra</p>
+                    <p class="font-Caudex font-bold text-xs">• Defender <input type="text" class="border-2 border-black w-20"> dos males que lhe afligem</p>
+                    <p class="font-Caudex font-bold text-xs">• Descobrir a verdade a respeito de <input type="text" class="border-2 border-black w-20">.</p>
+
+                    <p class="font-Caudex font-bold text-xs">Depois, escolha duas dádivas:</p>
+
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Um senso de direção infalível que me aponta para <input type="text" class="border-2 border-black w-20">
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Invulnerabilidade contra <input type="text" class="border-2 border-black w-20">  (por exemplo, armas afiadas, <br>
+                        fogo, encantamentos, etc.)
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Uma marca de autoridade divina
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Sentidos que atravessem qualquer mentira
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Uma voz que transcenda a linguagem
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Ver-se livre da fome, sede e sono
+                    </p>
+                    <p class="font-Caudex font-bold text-xs">
+                        <input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black"> Os Deuses e seus Servos;
+                    </p>
+
+                    <p class="font-Caudex font-bold text-xs">O MJ lhe dirá qual voto ou quais votos deverão ser mantidos para que essas dádivas <br>
+                    lhe sejam concedidas:</p>
+
+                    <p class="font-Caudex font-bold text-xs">• Honra (proibido: truques e táticas covardes)</p>
+                    <p class="font-Caudex font-bold text-xs">• Temperança (proibido: comilança, bebedeira e os prazeres da carne)</p>
+                    <p class="font-Caudex font-bold text-xs">• Piedade (requer: realizar seus rituais sagrados diariamente)</p>
+                    <p class="font-Caudex font-bold text-xs">• Valor (proibido: permitir que uma criatura maligna viva)</p>
+                    <p class="font-Caudex font-bold text-xs">• Verdade (proibido: mentiras)</p>
+                    <p class="font-Caudex font-bold text-xs">• Hospitalidade (requer: dar conforto àqueles que necessitem, não importa quem sejam).</p>
+                    
+                </div>
+            </div>           
+        </div>
+    </div>
+    <div class="hidden grid grid-cols-6 sm:grid-rows-7 grid-rows-2 gap-2 place-items-center min-h-screen min-w-screen" id="segundaPag-Paladino">
+        <div class="col-span-2 sm:col-span-4 row-span-4 sm:row-span-7 col-start-3 sm:col-start-2 box-content size-auto border-2 rounded-lg sm:rounded-2x1 border-gold p-1 bg-white">
+            <p class="font-Caudex font-bold bg-black text-white rounded pl-1">
+                EQUIPAMENTO
+                <span class="left-0 ml-44">CARGA <input type="number" placeholder="Atual" class="box-content border-2 border-black w-16 placeholder-black placeholder:p-2 text-black">
+                <input type="number" placeholder="Max" class="box-content border-2 border-black w-16 placeholder-black placeholder:p-2 text-black"></span>
+            </p>
+            <select name="Paginas" id="paginas-druida" class="box-content border-2 border-black right-0 w-44 text-black name-black font-Caudex cursor-pointer hover:bg-black hover:text-white transition-colors">
+                <option id="primeiraPagDruida" value="primeiraPagina" class="text-black font-Caudex">1º Pagina</option>
+                <option id="segundaPagDruida" value="segundaPagina" class="font-Caudex" selected>2º Pagina</option>
+            </select>
+            <div class="grid-cols-2 grid-rows-7 gap-4 flex">
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-sm"><span class="font-bold">Sua carga é igual a 12+For.</span> Você possui rações de masmorra <br>
+                    (carga 5, peso 1). <span class="font-bold">, uma armadura de escamas</span> (armadura 2, peso 3), e algum objeto de <br>
+                    sua fé – descreva-o (peso 0). </p>
+                    <p class="font-Caudex text-sm font-bold">Escolha sua arma:</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Alabarda (alcance, dano +1, duas mãos, peso 2);</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Espada longa (corpo a corpo, dano +1, peso 1) e escudo (armadura +1, <br>
+                    peso 2)</p>
+
+                    <p class="font-Caudex text-sm font-bold">Escolha um:</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Equipamento de aventureiro (carga 5, peso 1);</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Rações de masmorra (carga 5, peso 1) e poção de cura (carga 1, peso 0);</p>
+                </div>
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-sm font-bold">Escolha um:</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Equipamento de aventureiro (carga 5, peso 1);</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Rações de masmorra (carga 5, peso 1) e poção de cura (carga 1, peso 0);</p>
+                </div>
+            </div>
+            <p class="font-Caudex font-bold bg-black text-white rounded pl-1">
+                MOVIMENTO AVANÇADOS
+            </p>
+            <div class="grid-cols-2 grid-rows-7 gap-4 flex">
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-xs font-bold m-1">Quando ganhar um nível entre 2 e 5, escolha um dos seguintes movimentos:</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> FAVOR DIVINO</span></p>
+                    <p class="font-Caudex text-xs">Dedique-se a uma divindade (crie uma nova, ou escolha uma que <br>
+                    já foi estabelecida anteriormente). Você recebe os movimentos de <br>
+                    clérigo comungar e conjurar feitiços. <br>
+                    Assim que escolher este movimento, seu personagem será <br>
+                    considerado um clérigo de nível 1 para a utilização de feitiços. A <br>
+                    partir desse momento, sempre que ganhar um novo nível, aumente <br>
+                    seu nível efetivo de clérigo em 1.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> PROTEÇÃO SANGRENTA</span></p>
+                    <p class="font-Caudex text-xs">Sempre que receber dano, você pode cerrar os dentes e aceitar o <br>
+                    golpe. Se o fizer, você não recebe dano, mas adquire uma debilidade <br>
+                    de sua escolha. Caso já possua todas as seis debilidades, você não <br>
+                    poderá usar este movimento.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> PUNIÇÃO</span></p>
+                    <p class="font-Caudex text-xs">Enquanto estiver em uma busca, você causará +1d4 de dano.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> EXTERMINATUS</span></p>
+                    <p class="font-Caudex text-xs">Quando pronunciar em voz alta sua promessa de derrotar um <br>
+                    inimigo, você causará +2d4 de dano contra ele, e -4 de dano contra <br>
+                    todos os outros. Este efeito persiste até que o inimigo declarado seja <br>
+                    derrotado. Caso não seja capaz de vencê-lo ou desista da luta, você <br>
+                    pode admitir o fracasso, mas este efeito não se encerrará até que <br>
+                    você consiga se redimir.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> INVESTIR!</span></p>
+                    <p class="font-Caudex text-xs">Quando liderar a investida rumo ao combate, aqueles que o seguirem <br>
+                    recebem +1 adiante.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> DEFENSOR CONVICTO</span></p>
+                    <p class="font-Caudex text-xs">Quando defender, você sempre recebe +1 domínio, mesmo com 6-.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> PREPARAR ATAQUE</span></p>
+                    <p class="font-Caudex text-xs">Quando matar e pilhar, escolha um aliado. O próximo ataque que <br>
+                    ele realizar contra o seu alvo causará +1d4 de dano.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> PROTEÇÃO SAGRADA</span></p>
+                    <p class="font-Caudex text-xs">Você recebe armadura +1 enquanto estiver em uma busca.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> VOZ DE AUTORIDADE</span></p>
+                    <p class="font-Caudex text-xs">Você recebe +1 para comandar servos.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> HOSPITALÁRIO</span></p>
+                    <p class="font-Caudex text-xs">Quando curar um aliado, cure +1d8 de dano.</p>
+                </div>
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-xs font-bold m-1">Quando ganhar um nível entre 6 e 10, escolha um dos seguintes movimentos ou <br>
+                    um dos movimentos de níveis 2-5:</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> PROVA DE FÉ</span></p>
+                    <p class="font-Caudex text-xs">Requer: Favor Divino <br>
+                    Quando observar a conjuração de um feitiço divino, você pode <br>
+                    perguntar ao MJ qual divindade o concedeu, e quais são seus efeitos. <br>
+                    Receba +1 adiante se agir de acordo com as respostas</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> PUNIÇÃO DIVINA</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Punição <br>
+                    Enquanto estiver em uma busca, você causa +1d8 de dano.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> SEMPRE EM FRENTE</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Investida! <br>
+                    Quando liderar a investida rumo ao combate, aqueles que o seguirem <br>
+                    recebem +1 adiante e armadura +2 adiante..</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> DEFENSOR INTRANSPONÍVEL</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Defensor Convicto <br>
+                    Quando defender, você sempre recebe +1 domínio, mesmo com 6-. <br>
+                    Se rolar 12+, no lugar de obter domínio, coloque-se no caminho da <br>
+                    criatura atacante mais próxima. Você receberá uma vantagem clara <br>
+                    contra ela, que será descrita pelo MJ.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> ATAQUE EM SEQUÊNCIA</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Preparar Ataque <br>
+                    Quando matar e pilhar, escolha um aliado. Além de causar +1d4 de <br>
+                    dano no próximo ataque contra o mesmo alvo, seu aliado receberá <br>
+                    +1 adiante contra ele.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> PROTEÇÃO DIVINA</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Proteção Sagrada <br>
+                    Você recebe armadura +2 enquanto estiver em uma busca.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> AUTORIDADE DIVINA</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Voz de Autoridade <br>
+                    Você recebe +1 para comandar servos. Com 12+, o subordinado <br>
+                    transcende seu momento de medo e dúvida e faz o que você mandar <br>
+                    com elevada efetividade e eficiência.a</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> OSPITALÁRIO PERFEITO</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Hospitalário <br>
+                    Quando curar um aliado, cure +2d8 de dano.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> INDOMÁVEL</span></p>
+                    <p class="font-Caudex text-xs">Quando sofrer uma debilidade (mesmo as originadas de Proteção <br>
+                    Sangrenta), receba +1 adiante contra quem a tenha causado.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> CAVALEIRO PERFEITO</span></p>
+                    <p class="font-Caudex text-xs">Quando iniciar uma busca, escolha três dádivas no lugar de duas.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const paladinoBtn = document.getElementById('paladinoRec');
+        const paladinoLabel = document.getElementById('primeiraPagina-Paladino');
+        let paladinoOpen = false;
+            
+        paladinoBtn.addEventListener('click', (e) => {
+            paladinoLabel.classList.toggle('hidden');
+            paladinoOpen = !paladinoLabel.classList.contains('hidden');
+        }, true);
+    </script>
+
+    <!-- Ficha Do Mago -->
+
+    <div class="hidden grid grid-cols-6 sm:grid-rows-7 grid-rows-2 gap-2 place-items-center min-h-screen min-w-screen" id="primeiraPagina-Mago">
+        <div class="col-span-2 sm:col-span-4 row-span-4 sm:row-span-7 col-start-3 sm:col-start-2 box-content size-auto border-2 rounded-lg sm:rounded-2x1 border-gold p-1 bg-white">
+            <input type="text" id="nomePersonagem" placeholder="Nome" class="flex font-black placeholder-white bg-black rounded-lg sm:rounded-2x1 placeholder:p-1 m-1 w-80 text-white">
+            <input type="number" id="forçaDruida" placeholder="FOR" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="drestrezaDruida" placeholder="DES" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="costituiçãoDruida" placeholder="COS" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="inteligenciaDruida" placeholder="INT" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="sabedoriaDruida" placeholder="SAB" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+            <input type="number" id="carismaDruida" placeholder="CAR" class="placeholder:font-Caudex placeholder-white w-14 bg-black rounded-lg sm:rounded-2x1 placeholder:p-2 text-white">
+
+            <select name="Paginas" id="paginas-druida" class="box-content border-2 border-black right-0 w-44 text-black name-black font-Caudex cursor-pointer hover:bg-black hover:text-white transition-colors">
+                <option id="primeiraPagBardo" value="primeiraPagina" selected class="text-black font-Caudex">1º Pagina</option>
+                <option id="segundaPagBardo" value="segundaPagina" class="font-Caudex">2º Pagina</option>
+            </select>
+            <p>
+                <span class="font-Caudex">DAMAGE</span><span class="m-2 bg-black text-white font-Caudex rounded-md"> D4 </span> <span class="ml-3 font-Caudex">ARMOR <input type="number" placeholder="0" class="placeholder:font-Caudex placeholder-white w-12 bg-black rounded-lg sm:rounded-2x1 placeholder:p-1 m-1 text-white"></span>
+                <span class="font-Caudex">LIFE <input type="number" placeholder="PV" class="placeholder:font-Caudex placeholder-white w-12 bg-black rounded-md placeholder:p-1 m-1 text-white"></span><span>
+                <span class="font-Caudex pr-1 text-sm border-2 border-black">Seu PV é 10+COS</span>
+            </p>
+           
+            <div class="grid-cols-2 grid-rows-7 gap-4 flex">
+                <div class="col-span-2 row-span-7">
+                    <p class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">ALINHAMENTOS</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> BOM</span></p>
+                    <p class="font-Caudex font-bold text-sm">Usar magia para ajudar diretamente outra pessoa.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> NEUTRO</span></p>
+                    <p class="font-Caudex font-bold text-sm">Descobrir informações a respeito de um enigma ou <br>
+                    mistério mágico.</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> MAU</span></p>
+                    <p class="font-Caudex font-bold text-sm">Usar magia para causar medo e terror</p>
+
+                    <h1 class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">RAÇA</h1>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> ELFO</span></p>
+                    <p class="font-Caudex font-bold text-xs">A magia lhe é tão natural quanto o ato de respirar. <br>
+                    Detectar Magia é considerada um truque para você.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> HUMANO</span></p>
+                    <p class="font-Caudex font-bold text-xs">Escolha um feitiço de clérigo. Você pode conjurá-lo como <br>
+                    se fosse um feitiço de mago.</p>
+
+                    <h1 class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">VÍNCULOS</h1>
+                    <p class="font-Caudex font-bold text-xs m-1">Preencha pelo menos um dos espaços em branco com o <br>
+                    nome de algum companheiro:</p>
+                    <p class="font-Caudex font-bold text-xs">• <input type="text" class="border-2 border-black w-20" placeholder="..."> terá um importante papel <br>
+                    a desempenhar em eventos vindouros. <br>
+                    Assim dizem minhas previsões!</p>
+
+                    <p class="font-Caudex font-bold text-xs">• <input type="text" class="border-2 border-black"> está escondendo de mim <br>
+                    um importante segredo.</p>
+
+                    <p class="font-Caudex font-bold text-xs">• <input type="text" class="border-2 border-black w-20"> é totalmente ignorante <br>
+                    sobre o funcionamento deste mundo. <br>
+                    Eu lhe ensinarei tudo o que puder.</p>
+
+                    <p class="font-Caudex font-bold text-sm"><input type="number" class="border-2 border-black w-10 placeholder-black" placeholder="1"> Suba de nivel com seu lvl atual + 7 de XP</p>
+
+                </div>
+                <div class="col-span-2 row-span-7">
+                    <h1 class="text-white bg-black font-Caudex rounded-sm sm:rounded-lg p-1 font-bold">MOVIMENTOS INICIAIS</h1>
+                    <p class="font-Caudex font-bold text-10px">Você começa com o seguintes movimentos.</p>
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> GRIMÓRIO</p>
+                    <p class="font-Caudex text-xs"><span class="font-bold">Você aprendeu diversos feitiços e os inscreveu em seu grimório. Comece o jogo com 3 <br>
+                    feitiços de primeiro nível anotados em seu livro, assim como todos os truques. Sempre <br>
+                    que ganhar um nível, adicione ao seu grimório um feitiço de nível igual ou inferior ao <br>
+                    seu. O livro possui peso 1.</p>
+
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> PREPARAR FEITIÇOS</p></p>
+                    <p class="font-Caudex font-bold text-10px">Quando passar algum tempo contemplando silenciosamente seu grimório (uma hora, <br>
+                    aproximadamente) sem interrupções, você: <br>
+                    • Perde todos os feitiços que havia preparado anteriormente <br>
+                    • Prepara novos feitiços que estejam anotados em seu grimório à sua escolha, cujo total <br>
+                    de níveis não supere seu próprio nível + 1 <br>
+                    • Prepara todos os seus truques, que nunca contam para o limite acima. </p>
+
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> CONJURAR FEITIÇOS (INT)</p></p>
+                    <p class="font-Caudex font-bold text-xs">Quando lançar um feitiço preparado, role+INT. Com 10+, o feitiço é conjurado com <br>
+                    sucesso e não é esquecido – logo, você poderá conjurá-lo novamente mais tarde. Com <br>
+                    7-9, o feitiço é conjurado, mas escolha um:</p>
+                    <p class="font-Caudex text-xs">• Você atrai atenção indesejável ou se coloca em alguma situação complicada. O MJ <br>
+                    descreverá como. <br>
+                    • Sua conjuração perturba a trama da realidade – receba -1 constante para conjurar <br>
+                    feitiços até a próxima vez que você Preparar Feitiços. <br>
+                    • Você esquece o feitiço após conjurá-lo, e não conseguirá conjurá-lo de novo até a <br>
+                    próxima vez que preparar feitiços. <br>
+                    Repare que manter ativos feitiços com efeitos contínuos pode lhe ocasionar uma <br>
+                    penalidade na rolagem de conjurar feitiços. </p>
+
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> DEFESA MÁGICA</p>
+                    <p class="font-Caudex font-bold text-xs">Você pode desfazer um feitiço contínuo imediatamente, e utilizar a energia envolvida <br>
+                    em sua dissipação para defletir um ataque. O feitiço é encerrado e você subtrai o nível <br>
+                    dele do dano recebido.</p>
+
+                    <p class="font-Caudex font-bold"><button class="bg-black border-2 border-black size-4"></button> RITUAL</p>
+                    <p class="font-Caudex text-xs"><span class="font-bold">Quando drenar energia de um local de poder para criar um efeito mágico,</span> diga ao MJ <br>
+                    o que está tentando realizar. Efeitos advindos de rituais são sempre possíveis, mas o MJ <br>
+                    lhe dará de uma a quatro das condições abaixo:
+                    • O ritual vai demorar dias/semanas/meses <br>
+                    • Primeiro você tem que <input type="text" class="border-2 border-black"> <br>
+                    • Você precisará da ajuda de <input type="text" class="border-2 border-black"> <br>
+                    • O ritual vai requerer uma enorme quantia em dinheiro; <br>
+                    • O melhor que consegue fazer é uma versão inferior, pouco confiável e limitada; <br>
+                    • Você e seus aliados correrão o perigo de <input type="text" class="border-2 border-black"> <br>
+                    • Você precisará desencantar <input type="text" class="border-2 border-black"> para fazê-lo.</p>
+                </div>
+            </div>           
+        </div>
+    </div>
+    <div class="hidden grid grid-cols-6 sm:grid-rows-7 grid-rows-2 gap-2 place-items-center min-h-screen min-w-screen" id="segundaPagina-Mago">
+        <div class="col-span-2 sm:col-span-4 row-span-4 sm:row-span-7 col-start-3 sm:col-start-2 box-content size-auto border-2 rounded-lg sm:rounded-2x1 border-gold p-1 bg-white">
+            <p class="font-Caudex font-bold bg-black text-white rounded pl-1">
+                EQUIPAMENTO
+                <span class="left-0 ml-44">CARGA <input type="number" placeholder="Atual" class="box-content border-2 border-black w-16 placeholder-black placeholder:p-2 text-black">
+                <input type="number" placeholder="Max" class="box-content border-2 border-black w-16 placeholder-black placeholder:p-2 text-black"></span>
+            </p>
+            <select name="Paginas" id="paginas-druida" class="box-content border-2 border-black right-0 w-44 text-black name-black font-Caudex cursor-pointer hover:bg-black hover:text-white transition-colors">
+                <option id="primeiraPagDruida" value="primeiraPagina" class="text-black font-Caudex">1º Pagina</option>
+                <option id="segundaPagDruida" value="segundaPagina" class="font-Caudex" selected>2º Pagina</option>
+            </select>
+            <div class="grid-cols-2 grid-rows-7 gap-4 flex">
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-sm"><span class="font-bold">Sua carga é igual a 7+For.</span> Você possui seu grimório (peso 1) e rações de <br>
+                    masmorra (carga 5, peso 1).</p>
+
+                    <p class="font-Caudex text-sm font-bold">Escolha suas defesas:</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Armadura de couro (armadura 1, peso 1)</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Bolsa de livros (carga 5, peso 2) e Poções de cura (carga 3, peso 0)</p>
+
+                </div>
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-sm font-bold">Escolha seu armamento:</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Adaga (mão, peso 1)</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Cajado (corpo a corpo, duas mãos, peso 1)</p>
+
+                    <p class="font-Caudex text-sm font-bold">Escolha um:</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Poção de cura (carga 1, peso 0)</p>
+                    <p class="font-Caudex tex-sm"><input type="checkbox" class="box-content border-3 border-black size-3 m-1 transition-colors has-checked:bg-black">Antitoxinas (carga 3, peso 0)</p>
+                </div>
+            </div>
+            <p class="font-Caudex font-bold bg-black text-white rounded pl-1">
+                MOVIMENTO AVANÇADOS
+            </p>
+            <div class="grid-cols-2 grid-rows-7 gap-4 flex">
+                <div class="col-span-2 row-span-7">
+                    <p class="font-Caudex text-xs font-bold m-1">Quando ganhar um nível entre 2 e 5, escolha um dos seguintes movimentos:</p>
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> PRODÍGIO</span></p>
+                    <p class="font-Caudex text-xs">Escolha um feitiço. Você o prepara como se fosse 1 nível menor.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> MAGIA POTENCIALIZADA</span></p>
+                    <p class="font-Caudex text-xs">Quando conjurar feitiços, com 10+ você tem a opção de escolher um item da lista de <br>
+                    7-9. Caso o faça, pode escolher também um dos itens da lista abaixo: <br>
+                    • os efeitos do feitiço são maximizados; <br>
+                    • os alvos do feitiço são dobrados</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> FONTE DE CONHECIMENTO</span></p>
+                    <p class="font-Caudex text-xs">Quando falar difícil a respeito de alguma coisa que ninguém mais saiba, receba +1.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> SABE-TUDO</span></p>
+                    <p class="font-Caudex text-xs">Quando o personagem de outro jogador lhe pedir conselhos, você lhe disser qual <br>
+                    considera ser a melhor solução e ele seguir seu conselho, ele receberá +1 adiante e você <br>
+                    marcará XP.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> GRIMÓRIO EXPANDIDO</span></p>
+                    <p class="font-Caudex text-xs">Adicione um feitiço novo de qualquer outra classe ao seu grimório</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> ENCANTADOR</span></p>
+                    <p class="font-Caudex text-xs">Quando puder passar um tempo estudando um item mágico em um local seguro, <br>
+                    pergunte ao MJ o que ele faz. Ele responderá honestamente.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> LÓGICA</span></p>
+                    <p class="font-Caudex text-xs">Quando utilizar seu poder de dedução para analisar os arredores, você pode <br>
+                    discernir realidades com INT no lugar de SAB.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> PROTEÇÃO ARCANA</span></p>
+                    <p class="font-Caudex text-xs">Enquanto estiver com pelo menos um feitiço de nível 1 ou superior preparado, você <br>
+                    recebe armadura +2.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> CONTRAMÁGICA</span></p>
+                    <p class="font-Caudex text-xs">Quando tentar conter um feitiço arcano que iria lhe afetar, comprometa um de seus <br>
+                    feitiços preparados na defesa e role+INT. Com 10+, o feitiço é contido e não lhe afeta. <br>
+                    Com 7-9, o feitiço é contido e você esquece o feitiço comprometido. Sua contramágica <br>
+                    protege apenas você – caso o feitiço contido tenha outros alvos, eles serão afetados <br>
+                    normalmente.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> ESTUDAR RAPIDAMENTE</span></p>
+                    <p class="font-Caudex text-xs">Quando observar os efeitos de um feitiço arcano, pergunte ao MJ seu nome e quais são <br>
+                    os seus efeitos. Você recebe +1 adiante quando agir de acordo com a resposta.</p>
+
+                    <p class="font-Caudex text-xs font-bold m-1">Quando ganhar um nível entre 6 e 10, escolha um dos seguintes movimentos ou <br>
+                    um dos movimentos de níveis 2-5:</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> MESTRE</span></p>
+                    <p class="font-Caudex text-xs">Requer: Prodígio <br>
+                    Escolha um feitiço além daquele selecionado com prodígio. Você o prepara como se <br>
+                    fosse 1 nível menor.</p>
+                </div>
+                <div class="col-span-2 row-span-7">
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> MAGIA POTENCIALIZADA SUPERIOR</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Magia Potencializada <br>
+                    Quando conjurar feitiços, com 10+ você pode escolher um item da lista de 7-9. Caso o <br>
+                    faça, pode escolher também um dos itens da lista abaixo. Com 12+, você pode <br>
+                    escolher um dos itens da lista abaixo sem custo: <br>
+                    • Os efeitos do feitiço são dobrados <br>
+                    • Os alvos do feitiço são dobrados</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> ALMA DE ENCANTADOR</span></p>
+                    <p class="font-Caudex text-xs">Requer: Encantador <br>
+                    Quando puder passar um tempo estudando um item mágico em um local seguro, você <br>
+                    pode aumentar o poder do objeto para que, da próxima vez que o utilizar, seus efeitos <br>
+                    sejam amplificados. O MJ lhe dirá como.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> LÓGICA EXTREMA</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Investida! <br>
+                    Quando liderar a investida rumo ao combate, aqueles que o seguirem <br>
+                    recebem +1 adiante e armadura +2 adiante..</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> DEFENSOR INTRANSPONÍVEL</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Lógica <br>
+                    Quando utilizar puramente seu poder de dedução para analisar os arredores, você pode <br>
+                    discernir realidades com INT no lugar de SAB. Com 12+, você pode fazer ao MJ <br>
+                    quaisquer três perguntas, sem ser limitado pela lista.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> ARMADURA ARCANA</span></p>
+                    <p class="font-Caudex text-xs">Substitui: Proteção Arcana <br>
+                    Enquanto estiver com pelo menos um feitiço de nível 1 ou superior preparado, você <br>
+                    recebe armadura +4.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> CONTRAMÁGICA PROTETORA</span></p>
+                    <p class="font-Caudex text-xs">Requer: Contramágica <br>
+                    Quando um aliado em sua linha de visão for afetado por um feitiço, você pode contê-lo <br>
+                    como se você fosse o alvo. Caso um feitiço afete vários aliados, você deve fazer uma <br>
+                    contramágica para cada um separadamente</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> CORRENTE ETÉREA</span></p>
+                    <p class="font-Caudex text-xs">Quando passar um tempo com um alvo disposto ou incapacitado, você pode forjar uma <br>
+                    corrente etérea entre vocês. Você passa a perceber o que o alvo percebe e pode discernir <br>
+                    realidades a respeito dele ou de seus arredores independentemente da distância que os <br>
+                    separar. Uma pessoa que tenha se disposto a forjar esta corrente consegue se comunicar <br>
+                    com você como se ambos estivessem na mesma sala.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> FIOS MÍSTICOS DE MARIONETE</span></p>
+                    <p class="font-Caudex text-xs">Quando utilizar feitiços para controlar as ações de outras pessoas, elas não se lembrarão <br>
+                    do que fizeram sob suas ordens, e não lhe desejarão nenhum mal</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg">  AMPLIAÇÃO MÁGICAL</span></p>
+                    <p class="font-Caudex text-xs">Quando causar dano em uma criatura, você pode aplicar a energia de um feitiço <br>
+                    diretamente contra ela. Encerre um de seus feitiços contínuos e adicione seu nível ao <br>
+                    dano causado.</p>
+
+                    <p><input type="checkbox" class="box-content border-3 border-black size-4 m-1 transition-colors has-checked:bg-black"><span class="font-Caudex font-bold text-lg"> AUTOSSUFICIENTE</span></p>
+                    <p class="font-Caudex text-xs">Quando tiver tempo, materiais arcanos, e um lugar seguro, você pode criar seu próprio <br>
+                    local de poder. Descreva para o MJ que tipo de poder é esse e como irá vinculá-lo ao <br>
+                    local. O MJ lhe informará um tipo de criatura que terá interesse em seus trabalhos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const magoBtn = document.getElementById('magoRec');
+        const magoLabel = document.getElementById('primeiraPagina-Mago');
+        let magoOpen = false;
+            
+        magoBtn.addEventListener('click', (e) => {
+            magoLabel.classList.toggle('hidden');
+            magoOpen = !paladinoLabel.classList.contains('hidden');
+        }, true);
+    </script>
+
+    <script>
+        const chatBtn = document.getElementById('chat-Btn');
+        const chatBox = document.getElementById('SideBarRight');
+        let chatOpen = false;
+            
+        chatBtn.addEventListener('click', (e) => {
+            chatBox.classList.toggle('hidden');
+            chatOpen = !chatBox.classList.contains('hidden');
+        });
+    </script>
+
+    <script>
+        const chatbox = document.getElementById('chatbox');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+
+        // Function to add mensage to the chat
+        function adicionarMensagem(remetente, texto, lado = 'esquerda') {
+            const mensagem = document.createElement('div');
+            mensagem.classList.add('mb-2', 'p-2', 'rounded', 'break-words', 'w-34', 'sm:w-64');
+
+            if (lado === 'direita') {
+            mensagem.classList.add('bg-gold', 'text-crimson', 'self-end', 'text-right');
+            } else {
+            mensagem.classList.add('bg-lightYellow', 'text-crimson', 'self-start');
+            }
+
+            mensagem.innerHTML = `<strong>${remetente}:</strong><br>${texto}`;
+            chatbox.appendChild(mensagem);
+
+            // Automatic scroll
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        // Send mensage
+        function enviarMensagem() {
+            const texto = messageInput.value.trim();
+            if (texto === '') return;
+
+            // Show the user mensage
+            adicionarMensagem('Você', texto, 'direita');
+
+            // Clen input
+            messageInput.value = '';
+        }
+
+        // Click on button "Enviar"
+        sendButton.addEventListener('click', enviarMensagem);
+
+        // Press Enter to send
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+            enviarMensagem();
+            }
+        });
+    </script>
+</body>
+</html>
